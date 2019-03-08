@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-
+import { Component ,OnInit} from '@angular/core';
+import{ActivatedRoute,Router} from '@angular/router'
 import { MessageService } from '../../messages/message.service';
 
 import { Product } from '../product';
@@ -9,14 +9,25 @@ import { ProductService } from '../product.service';
   templateUrl: './product-edit.component.html',
   styleUrls: ['./product-edit.component.css']
 })
-export class ProductEditComponent {
+export class ProductEditComponent  implements OnInit{
   pageTitle = 'Product Edit';
   errorMessage: string;
 
   product: Product;
 
   constructor(private productService: ProductService,
-              private messageService: MessageService) { }
+              private messageService: MessageService,
+              private route:ActivatedRoute,
+            private router:Router) { }
+
+  ngOnInit():void{
+   this.route.paramMap.subscribe(
+     params=>{
+       const id=+params.get('id');
+       this.getProduct(id);
+     }
+   );
+  }
 
   getProduct(id: number): void {
     this.productService.getProduct(id)
@@ -81,5 +92,6 @@ export class ProductEditComponent {
     }
 
     // Navigate back to the product list
+    this.router.navigate(['/products']);
   }
 }
